@@ -66,7 +66,7 @@ export class App {
             .subscribe(
                 res => {},
                 err => {
-                    this.uiStateStore.endBackendAction('Error occurred');
+                    this.uiStateStore.endBackendAction();
                 }
             );
     }

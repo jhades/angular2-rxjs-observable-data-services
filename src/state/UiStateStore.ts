@@ -1,15 +1,14 @@
 
 import {Injectable} from "angular2/core";
-import {UiState} from "./ui-state";
+import {UiState, initialUiState} from "./ui-state";
 import {Subject} from "rxjs/Subject";
 import {asObservable} from "./asObservable";
+import {BehaviorSubject} from "rxjs/Rx";
 
 @Injectable()
 export class UiStateStore {
 
-    _uiState: UiState;
-
-    uiState: Subject<UiState> = new Subject();
+    uiState: BehaviorSubject<UiState> = new BehaviorSubject(initialUiState);
 
     get uiState() {
         return asObservable(this.uiState);
@@ -17,10 +16,16 @@ export class UiStateStore {
 
 
     startBackendAction(message:string) {
-        
+        this.uiState.next({
+            actionOngoing: true,
+            message
+        });
     }
 
-    endBackendAction(message?: string) {
-        
+    endBackendAction() {
+        this.uiState.next({
+            actionOngoing: false,
+            message: ''
+        });
     }
 }

@@ -11,16 +11,14 @@ import {BehaviorSubject} from "rxjs/Rx";
 @Injectable()
 export class TodoStore {
 
-    _todos: List<Todo> = List([]);
-
     todos: BehaviorSubject<List<Todo>> = new BehaviorSubject(List([]));
-
-    get todos() {
-        return asObservable(this.todos);
-    }
 
     constructor(private todoBackendService: TodoBackendService) {
         this.loadInitialData();
+    }
+
+    get todos() {
+        return asObservable(this.todos);
     }
 
     loadInitialData() {
@@ -37,26 +35,48 @@ export class TodoStore {
 
     }
 
-    constructor(todoBackendService: TodoBackendService) {
+    addTodo(newTodo:Todo):Observable {
 
+        let obs = this.todoBackendService.saveTodo(newTodo);
+
+        obs.subscribe(
+                res => {
+                    this.todos.next(this.todos.getValue().push(newTodo));
+                });
+
+        return obs;
     }
 
-    addTodo(newTodo:Todo):Observable<List<Todo>> {
-        return null;
+    toggleTodo(toggled:Todo): Observable {
+        let obs: Observable = this.todoBackendService.toggleTodo(toggled);
+
+        obs.subscribe(
+            res => {
+                let todos = this.todos.getValue();
+                let index = todos.findIndex((todo: Todo) => todo.id === toggled.id);
+                let todo:Todo = todos.get(index);
+                this.todos.next(todos.set(index, new Todo({id:toggled.id, description:toggled.description, completed:!toggled.completed}) ));
+            }
+        );
+
+        return obs;
     }
 
-    toggleTodo(todo:Todo) {
-        this.todoBackendService.toggleTodo(todo)
-            .subscribe(
-                res => console.log('todo toggled successfully'),
-                err => console.log('error toggling todo')
+
+    deleteTodo(deleted:Todo): Observable {
+        let obs: Observable = this.todoBackendService.deleteTodo(deleted);
+
+        obs.subscribe(
+                res => {
+                    let todos: List<Todo> = this.todos.getValue();
+                    let index = todos.findIndex((todo) => todo.id === deleted.id);
+                    return todos.delete(index);
+
+                }
             );
+
+        return obs;
     }
 
-    deleteTodo(todo:Todo) {
-        this.todoBackendService.deleteTodo(todo)
-            .subscribe(
-                res => console.log('todo toggled successfully'),
-                err => console.log('error toggling todo')
-            );    }
+
 }
