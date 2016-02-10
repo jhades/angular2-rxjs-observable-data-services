@@ -59,7 +59,6 @@ export class App {
 
     onAddTodo(description) {
         let newTodo = new Todo({id:Math.random(), description});
-
         this.uiStateStore.startBackendAction('Saving Todo...');
 
         this.todoStore.addTodo(newTodo)
