@@ -37,7 +37,7 @@ export class TodoStore {
 
     addTodo(newTodo:Todo):Observable {
 
-        let obs = this.todoBackendService.saveTodo(newTodo);
+        let obs = this.todoBackendService.saveTodo(newTodo).share();
 
         obs.subscribe(
                 res => {
@@ -48,7 +48,7 @@ export class TodoStore {
     }
 
     toggleTodo(toggled:Todo): Observable {
-        let obs: Observable = this.todoBackendService.toggleTodo(toggled);
+        let obs: Observable = this.todoBackendService.toggleTodo(toggled).share();
 
         obs.subscribe(
             res => {
@@ -64,13 +64,13 @@ export class TodoStore {
 
 
     deleteTodo(deleted:Todo): Observable {
-        let obs: Observable = this.todoBackendService.deleteTodo(deleted);
+        let obs: Observable = this.todoBackendService.deleteTodo(deleted).share();
 
         obs.subscribe(
                 res => {
                     let todos: List<Todo> = this._todos.getValue();
                     let index = todos.findIndex((todo) => todo.id === deleted.id);
-                    return todos.delete(index);
+                    this._todos.next(todos.delete(index));
 
                 }
             );
