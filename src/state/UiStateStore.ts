@@ -8,22 +8,22 @@ import {BehaviorSubject} from "rxjs/Rx";
 @Injectable()
 export class UiStateStore {
 
-    uiState: BehaviorSubject<UiState> = new BehaviorSubject(initialUiState);
+    _uiState: BehaviorSubject<UiState> = new BehaviorSubject(initialUiState);
 
     get uiState() {
-        return asObservable(this.uiState);
+        return asObservable(this._uiState);
     }
 
 
     startBackendAction(message:string) {
-        this.uiState.next({
+        this._uiState.next({
             actionOngoing: true,
             message
         });
     }
 
     endBackendAction() {
-        this.uiState.next({
+        this._uiState.next({
             actionOngoing: false,
             message: ''
         });

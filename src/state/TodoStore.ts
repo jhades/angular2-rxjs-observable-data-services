@@ -11,14 +11,14 @@ import {BehaviorSubject} from "rxjs/Rx";
 @Injectable()
 export class TodoStore {
 
-    todos: BehaviorSubject<List<Todo>> = new BehaviorSubject(List([]));
+    _todos: BehaviorSubject<List<Todo>> = new BehaviorSubject(List([]));
 
     constructor(private todoBackendService: TodoBackendService) {
         this.loadInitialData();
     }
 
     get todos() {
-        return asObservable(this.todos);
+        return asObservable(this._todos);
     }
 
     loadInitialData() {
@@ -28,7 +28,7 @@ export class TodoStore {
                     let todos = (<Object[]>res.json()).map((todo: any) =>
                         new Todo({id:todo.id, description:todo.description,completed: todo.completed}));
 
-                    this.todos.next(todos);
+                    this._todos.next(List(todos));
                 },
                 err => console.log("Error retrieving Todos")
             );
@@ -41,7 +41,7 @@ export class TodoStore {
 
         obs.subscribe(
                 res => {
-                    this.todos.next(this.todos.getValue().push(newTodo));
+                    this._todos.next(this._todos.getValue().push(newTodo));
                 });
 
         return obs;
@@ -52,10 +52,10 @@ export class TodoStore {
 
         obs.subscribe(
             res => {
-                let todos = this.todos.getValue();
+                let todos = this._todos.getValue();
                 let index = todos.findIndex((todo: Todo) => todo.id === toggled.id);
                 let todo:Todo = todos.get(index);
-                this.todos.next(todos.set(index, new Todo({id:toggled.id, description:toggled.description, completed:!toggled.completed}) ));
+                this._todos.next(todos.set(index, new Todo({id:toggled.id, description:toggled.description, completed:!toggled.completed}) ));
             }
         );
 
@@ -68,7 +68,7 @@ export class TodoStore {
 
         obs.subscribe(
                 res => {
-                    let todos: List<Todo> = this.todos.getValue();
+                    let todos: List<Todo> = this._todos.getValue();
                     let index = todos.findIndex((todo) => todo.id === deleted.id);
                     return todos.delete(index);
 
