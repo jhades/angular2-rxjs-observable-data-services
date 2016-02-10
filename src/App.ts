@@ -8,7 +8,6 @@ import {Header} from "./Header";
 import {TodoList} from "./TodoList";
 import {Todo} from "./Todo";
 import {Footer} from "./Footer";
-import {LoadTodosAction, AddTodoAction, StartBackendAction, EndBackendAction, Action} from "./state/todoActions";
 import {List} from "immutable";
 import {bootstrap} from "angular2/platform/browser";
 import {Subject} from "rxjs/Subject";
@@ -47,7 +46,6 @@ export class App {
 
     constructor(private todoStore: TodoStore, private uiStateStore: UiStateStore) {
 
-        this.loadInitialData();
     }
 
     get size() {
@@ -64,30 +62,13 @@ export class App {
 
         this.uiStateStore.startBackendAction('Saving Todo...');
 
-        this.todoService.saveTodo(newTodo)
+        this.todoStore.addTodo(newTodo)
             .subscribe(
-                res => {
-                    this.dispatcher.next(new AddTodoAction(newTodo));
-                    this.dispatcher.next(new EndBackendAction(null));
-                },
+                res => {},
                 err => {
-                    this.dispatcher.next(new EndBackendAction('Error occurred: '));
+                    this.uiStateStore.endBackendAction('Error occurred');
                 }
             );
-    }
-
-    loadInitialData() {
-        this.todoService.getAllTodos()
-            .subscribe(
-                res => {
-                    let todos = (<Object[]>res.json()).map((todo: any) =>
-                        new Todo({id:todo.id, description:todo.description,completed: todo.completed}));
-
-                    this.dispatcher.next(new LoadTodosAction(List(todos)));
-                },
-                err => console.log("Error retrieving Todos")
-            );
-
     }
 
 }

@@ -16,4 +16,11 @@ export class UiStateStore {
     }
 
 
+    startBackendAction(message:string) {
+        
+    }
+
+    endBackendAction(message?: string) {
+        
+    }
 }
