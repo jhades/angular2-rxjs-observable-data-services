@@ -1,12 +1,10 @@
 import {Component, Input, Output, EventEmitter, Inject} from 'angular2/core';
 import {Todo} from "./Todo";
 import {List} from 'immutable';
-import {TodoService} from "./TodoService";
+import {TodoBackendService} from "./TodoService";
 import {ToggleTodoAction, DeleteTodoAction, Action} from './state/todoActions';
-import {dispatcher,state} from "./di-tokens";
 import {Observer} from "rxjs/Observer";
 import {Observable} from "rxjs/Observable";
-import {ApplicationState} from "./state/application-state";
 
 
 @Component({
@@ -29,9 +27,7 @@ import {ApplicationState} from "./state/application-state";
 })
 export class TodoList {
 
-    constructor(private todoService: TodoService,
-                @Inject(dispatcher) private dispatcher: Observer<Action>,
-                @Inject(state) private state: Observable<ApplicationState>) {
+    constructor(private todoService: TodoBackendService) {
 
     }
 

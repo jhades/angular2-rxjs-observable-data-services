@@ -8,21 +8,19 @@ import {Header} from "./Header";
 import {TodoList} from "./TodoList";
 import {Todo} from "./Todo";
 import {Footer} from "./Footer";
-import {TodoService} from "./TodoService";
 import {LoadTodosAction, AddTodoAction, StartBackendAction, EndBackendAction, Action} from "./state/todoActions";
 import {List} from "immutable";
 import {bootstrap} from "angular2/platform/browser";
-import {dispatcher, state, initialState} from "./di-tokens";
 import {Subject} from "rxjs/Subject";
-import {applicationStateFactory} from "./state/applicationStateFactory";
 import {Observable} from "rxjs/Observable";
-import {ApplicationState} from "./state/application-state";
 import {Observer} from "rxjs/Observer";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/scan';
 import 'rxjs/add/operator/share';
-import {UiState, initialUiState} from "./state/ui-state";
-import './getName';
+import {TodoBackendService} from "./TodoBackendService";
+import {TodoStore} from "./state/TodoStore";
+import {UiStateStore} from "./state/UiStateStore";
+import {UiState} from "./state/ui-state";
 
 @Component({
     selector: 'app',
@@ -47,26 +45,24 @@ import './getName';
 })
 export class App {
 
-    constructor(@Inject(dispatcher) private dispatcher: Observer<Action>,
-                @Inject(state) private state: Observable<ApplicationState>,
-                private todoService: TodoService) {
+    constructor(private todoStore: TodoStore, private uiStateStore: UiStateStore) {
 
         this.loadInitialData();
     }
 
     get size() {
-        return this.state.map((state: ApplicationState) => state.todos.size);
+        return this.todoStore.todos.map((todos: List<Todo>) => todos.size);
     }
 
     get uiStateMessage() {
-        return this.state.map((state: ApplicationState) => state.uiState.message);
+        return this.uiStateStore.uiState.map((uiState: UiState) => uiState.message);
     }
 
 
     onAddTodo(description) {
         let newTodo = new Todo({id:Math.random(), description});
 
-        this.dispatcher.next(new StartBackendAction('Saving Todo...'));
+        this.uiStateStore.startBackendAction('Saving Todo...');
 
         this.todoService.saveTodo(newTodo)
             .subscribe(
@@ -98,8 +94,7 @@ export class App {
 
 bootstrap(App, [
     HTTP_PROVIDERS,
-    TodoService,
-    provide(initialState, {useValue: {todos: List([]), uiState: initialUiState}}),
-    provide(dispatcher, {useValue: new Subject<Action>()}),
-    provide(state, {useFactory: applicationStateFactory, deps: [new Inject(initialState), new Inject(dispatcher)]})
+    TodoBackendService,
+    TodoStore,
+    UiStateStore
 ]);

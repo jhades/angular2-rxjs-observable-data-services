@@ -7,7 +7,7 @@ import {Observable} from "rxjs/Observable";
 
 
 @Injectable()
-export class TodoService {
+export class TodoBackendService {
 
     http:Http;
 
