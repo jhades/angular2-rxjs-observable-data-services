@@ -1,17 +1,14 @@
-# Angular 2 RxJs Redux-like sample App
+# Angular 2 RxJs Observable Data Services example application
 
-This repository is an example of how to build a Flux/Redux-like Angular 2 application using RxJs and Functional Reactive Programming. This application has a single atom of state, and is based upon two constructs:
+This repository is an example of how to build a Flux-like Angular 2 application using RxJs and the Observable Data Services design pattern. 
 
-- the action dispatcher
-- the application state observable
-
-See this blog post for further details on the application architecture: [Angular 2 Application Architecture - Building apps with RxJs and Functional Reactive Programming (vs Redux)](http://localhost:5000/angular-2-application-architecture-building-applications-using-rxjs-and-functional-reactive-programming-vs-redux/)
+See this blog post for further details on this application architecture: 
+[How to build Angular 2 Flux apps using RxJs Observable Data Services - Pitfalls to avoid](http://blog.jhades.org/angular-2-application-architecture-building-applications-using-rxjs-and-functional-reactive-programming-vs-redux/)
 
 ## Installation
 
 To install the application, make sure to have npm 3 or higher and node 4 or higher, and follow the following steps:
 
-    git clone https://github.com/jhades/angular2-rxjs-example.git
     npm install
     
 ## Running the application
