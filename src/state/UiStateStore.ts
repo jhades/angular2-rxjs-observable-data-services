@@ -8,7 +8,7 @@ import {BehaviorSubject} from "rxjs/Rx";
 @Injectable()
 export class UiStateStore {
 
-    _uiState: BehaviorSubject<UiState> = new BehaviorSubject(initialUiState);
+    private _uiState: BehaviorSubject<UiState> = new BehaviorSubject(initialUiState);
 
     get uiState() {
         return asObservable(this._uiState);
