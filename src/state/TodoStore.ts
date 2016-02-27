@@ -11,7 +11,7 @@ import {BehaviorSubject} from "rxjs/Rx";
 @Injectable()
 export class TodoStore {
 
-    _todos: BehaviorSubject<List<Todo>> = new BehaviorSubject(List([]));
+    private _todos: BehaviorSubject<List<Todo>> = new BehaviorSubject(List([]));
 
     constructor(private todoBackendService: TodoBackendService) {
         this.loadInitialData();
