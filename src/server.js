@@ -1,16 +1,13 @@
-
-/// <reference path="../node_modules/angular2/typings/node/node.d.ts"/>
-
-let express = require('express');
-let bodyParser = require('body-parser');
-let _ = require('lodash');
+var express = require('express');
+var bodyParser = require('body-parser');
+var _ = require('lodash');
 var httpProxy = require('http-proxy');
 
 var proxy = httpProxy.createProxyServer();
 
-let app = express();
+var app = express();
 
-let todos = [];
+var todos = [];
 
 app.use(express.static('.'));
 app.use(bodyParser.json());
@@ -22,8 +19,8 @@ app.route('/todo')
         res.send(todos);
     })
     .put((req, res) => {
-        let json = req.body;
-        let toggled = _.find(todos, (todo) => todo.id == json.id);
+        var json = req.body;
+        var toggled = _.find(todos, (todo) => todo.id == json.id);
         toggled.completed = !toggled.completed;
         console.log(JSON.stringify(todos));
         res.send();
@@ -46,6 +43,6 @@ app.all('/bundle.js', function (req, res) {
     });
 });
 
-let server = app.listen(8080, function() {
+var server = app.listen(8080, function() {
     console.log("Server running at http://localhost:" + server.address().port);
 });
