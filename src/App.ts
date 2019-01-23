@@ -63,7 +63,7 @@ export class App {
 
         this.todoStore.addTodo(newTodo)
             .subscribe(
-                res => {},
+                res => {this.uiStateStore.endBackendAction();},
                 err => {
                     this.uiStateStore.endBackendAction();
                 }
